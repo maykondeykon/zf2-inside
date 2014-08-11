@@ -23,15 +23,44 @@ $definitionList = new Zend\Di\DefinitionList(array(
 $di = new Zend\Di\Di($definitionList);
 
 // Adiciona parâmetros para serem usados quando determinada classe for instanciada
-$di->instanceManager()->setParameters('SON\Db\Connection', array(
-    'server' => 'localhost',
+// $di->instanceManager()->setParameters('SON\Db\Connection', array(
+//     'server' => 'localhost',
+//     'dbname' => 'banco',
+//     'user' => 'username',
+//     'password' => 123
+// ));
+
+
+//Cria um apelido para a classe de conexão e passa os parâmetros para a mesma
+$di->instanceManager()->addAlias('conexao1', 'SON\Db\Connection', array(
+    'server' => 'localho bst',
     'dbname' => 'banco',
     'user' => 'username',
     'password' => 123
 ));
+//Instância outra classe de conexão com outros parâmetros
+$di->instanceManager()->addAlias('conexao2', 'SON\Db\Connection', array(
+    'server' => 'localhost',
+    'dbname' => 'banco2',
+    'user' => 'username',
+    'password' => 1234
+));
 
-// Instancia as classes produto e categoria
-$produto = $di->get('SON\Produto');
+// Cria um apelido para as classes SON\Produto e SON\Db\Connection
+$di->instanceManager()->addAlias('Connection', 'SON\Db\Connection');
+$di->instanceManager()->addAlias('Produto', 'SON\Produto');
+
+// Instancia a classe produto
+$produto = $di->get('Produto');
+
+//Configura a conexão padrão para a classe Connection
+$di->instanceManager()->addTypePreference('SON\Db\Connection', 'conexao1');
+
+//Instancia a classe categoria passando o parâmetro do banco de dados, sobrescreve a conexão preferêcial
+// $categoria = $di->get('SON\Categoria',array('db'=>'conexao2'));
+
+
+//Aqui ele usa a conexão padrão
 $categoria = $di->get('SON\Categoria');
 
 // Cria uma cópia de produto e checa se são o mesmo objeto
@@ -39,7 +68,9 @@ $categoria = $di->get('SON\Categoria');
 // echo $produto === $produto2;
 
 // Exibe os dados carregados no Zend\Di --o @ exclui os 'Notices' da mensagem
-@Zend\Di\Display\Console::export($di);
+// @Zend\Di\Display\Console::export($di);
+
+print_r($categoria);
 
 
 
