@@ -6,9 +6,9 @@ class Produto
 
     private $categoria;
 
-    public function setCategoria(Categoria $categoria)
+    public function addCategoria(CategoriaInterface $categoria)
     {
-        $this->categoria = $categoria;
+        $this->categoria[] = $categoria;
     }
 }
 

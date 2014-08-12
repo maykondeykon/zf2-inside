@@ -48,19 +48,44 @@ $di->instanceManager()->addAlias('conexao2', 'SON\Db\Connection', array(
 $di->instanceManager()->addTypePreference('SON\Db\Connection', 'conexao1');
 
 // $categoria = $di->get('SON\Categoria', array(
-//     'db' => 'conexao2'
+// 'db' => 'conexao2'
 // ));
 
 // $di = new Zend\Di\Di();
 
-//Configura as dependências do método setCategoria de SON\Produto
+// Configura as dependências do método setCategoria de SON\Produto
+// $di->configure(new Zend\Di\Config(array(
+// 'definition' => array(
+// 'class' => array(
+// 'SON\Produto' => array(
+// 'setCategoria' => array(
+// 'required' => true //Configura para sempre excutar esta configuração
+// )
+// )
+// )
+// )
+// )));
+
+
+//Configura várias dependências para a classe SON\Produto
 $di->configure(new Zend\Di\Config(array(
     'definition' => array(
         'class' => array(
             'SON\Produto' => array(
-                'setCategoria' => array(
-                    'required' => true  //Configura para sempre excutar esta configuração
+                'addCategoria' => array(    //Informa o método
+                    'categoria' => array(   //informa o nome da classe
+                        'type' => 'SON\CategoriaInterface', //informa o tipo de classe
+                        'required' => true
+                    )
                 )
+            )
+        )
+    ),
+    'instance' => array(    // Cria as instâncias e insere as dependências
+        'SON\Produto' => array(
+            'injections' => array(
+                'SON\Categoria',
+                'SON\Category'
             )
         )
     )
