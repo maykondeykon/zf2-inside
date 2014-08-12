@@ -32,8 +32,15 @@ class Exemplo implements EventManagerAwareInterface
         return $this->events;
     }
 
-    function metodo()
+    function metodo($valor)
     {
         echo "método executou \n";
+        
+        //Gatilho
+        $this->getEventManager()->trigger(
+            __FUNCTION__,   //Pega o nome da função atual e usa como nome do trigger
+            $this,   //Contexto, a própria classe
+            array('valor'=>$valor)
+        );
     }
 }

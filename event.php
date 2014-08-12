@@ -12,5 +12,13 @@ $loader->registerNamespace('SON', 'library/SON');
 $loader->register();
 
 $exemplo = new SON\Event\Exemplo();
-$exemplo->metodo();
+
+//Cria um listener para a trigger metodo
+$exemplo->getEventManager()->attach('metodo',function ($e){
+   echo $e->getName()."\n" ;    // Pega o nome do evento
+   echo get_class($e->getTarget())."\n" ;   //Pega o nome da classe
+   echo $e->getParam('valor')."\n";
+});
+
+$exemplo->metodo(20);
 
