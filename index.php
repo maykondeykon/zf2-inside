@@ -24,21 +24,20 @@ $di = new Zend\Di\Di($definitionList);
 
 // Adiciona parâmetros para serem usados quando determinada classe for instanciada
 // $di->instanceManager()->setParameters('SON\Db\Connection', array(
-//     'server' => 'localhost',
-//     'dbname' => 'banco',
-//     'user' => 'username',
-//     'password' => 123
+// 'server' => 'localhost',
+// 'dbname' => 'banco',
+// 'user' => 'username',
+// 'password' => 123
 // ));
 
-
-//Cria um apelido para a classe de conexão e passa os parâmetros para a mesma
+// Cria um apelido para a classe de conexão e passa os parâmetros para a mesma
 $di->instanceManager()->addAlias('conexao1', 'SON\Db\Connection', array(
-    'server' => 'localho bst',
+    'server' => 'localhost',
     'dbname' => 'banco',
     'user' => 'username',
     'password' => 123
 ));
-//Instância outra classe de conexão com outros parâmetros
+// Instância outra classe de conexão com outros parâmetros
 $di->instanceManager()->addAlias('conexao2', 'SON\Db\Connection', array(
     'server' => 'localhost',
     'dbname' => 'banco2',
@@ -46,41 +45,27 @@ $di->instanceManager()->addAlias('conexao2', 'SON\Db\Connection', array(
     'password' => 1234
 ));
 
-// Cria um apelido para as classes SON\Produto e SON\Db\Connection
-$di->instanceManager()->addAlias('Connection', 'SON\Db\Connection');
-$di->instanceManager()->addAlias('Produto', 'SON\Produto');
-
-// Instancia a classe produto
-$produto = $di->get('Produto');
-
-//Configura a conexão padrão para a classe Connection
 $di->instanceManager()->addTypePreference('SON\Db\Connection', 'conexao1');
 
-//Instancia a classe categoria passando o parâmetro do banco de dados, sobrescreve a conexão preferêcial
-// $categoria = $di->get('SON\Categoria',array('db'=>'conexao2'));
+// $categoria = $di->get('SON\Categoria', array(
+//     'db' => 'conexao2'
+// ));
 
+// $di = new Zend\Di\Di();
 
-//Aqui ele usa a conexão padrão
-$categoria = $di->get('SON\Categoria');
+//Configura as dependências do método setCategoria de SON\Produto
+$di->configure(new Zend\Di\Config(array(
+    'definition' => array(
+        'class' => array(
+            'SON\Produto' => array(
+                'setCategoria' => array(
+                    'required' => true  //Configura para sempre excutar esta configuração
+                )
+            )
+        )
+    )
+)));
 
-// Cria uma cópia de produto e checa se são o mesmo objeto
-// $produto2 = $di->get('SON\Produto');
-// echo $produto === $produto2;
+$produto = $di->get('SON\Produto');
+print_r($produto);
 
-// Exibe os dados carregados no Zend\Di --o @ exclui os 'Notices' da mensagem
-// @Zend\Di\Display\Console::export($di);
-
-print_r($categoria);
-
-
-
-//Cria uma conexão com o banco de dados
-// $conexao = new SON\Db\Connection('localhost','banco', 'root', 'password');
-
-//Cria uma instância de Categoria
-//Injeta a dependência conexão na classe categoria
-// $categoria = new SON\Categoria($conexao);
-
-// $produto =  new \SON\Produto();
-// $produto->setId(1);
-// $produto->setNome('Produto 1');
