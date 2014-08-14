@@ -13,28 +13,47 @@ $loader->register();
 
 use Zend\ServiceManager\ServiceManager;
 
-//Instância o ServiceManager
-$serviceManager =  new ServiceManager();
+// Instância o ServiceManager
+$serviceManager = new ServiceManager();
 
-//Cria uma instância de Produto no ServiceManager
+// Cria uma instância de Produto no ServiceManager
 // $serviceManager->setService('Produto', new SON\Produto());
 
-//Instância um produto
+// Instância um produto
 // $produto = $serviceManager->get('Produto');
 // print_r($produto);
 
-//Retorna a mesma instância do serviço
+// Retorna a mesma instância do serviço
 // $produto2 = $serviceManager->get('Produto');
 
 // var_dump((spl_object_hash($produto)) === (spl_object_hash($produto2)));
 
-
-$serviceManager->setInvokableClass('Produto', 'SON\Produto');
-//Instância um produto sem precisar usar o 'new' -- evita o acoplamento
-$produto = $serviceManager->get('Produto');
+// InvokableClass
+// $serviceManager->setInvokableClass('Produto', 'SON\Produto');
+// Instância um produto sem precisar usar o 'new' -- evita o acoplamento
+// $produto = $serviceManager->get('Produto');
 // print_r($produto);
 
 // Retorna a mesma instância do serviço
-$produto2 = $serviceManager->get('Produto');
+// $produto2 = $serviceManager->get('Produto');
 
-var_dump((spl_object_hash($produto)) === (spl_object_hash($produto2)));
+// var_dump((spl_object_hash($produto)) === (spl_object_hash($produto2)));
+
+// Factories
+
+//Cria o serviço Connection
+$serviceManager->setService('Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
+
+//Configura a fabricação do objeto Categoria
+$serviceManager->setFactory('Categoria', function ($sm)
+{
+    // $connection = $sm->get('Connection');    //Recupera uma instância de Connection
+    // $categoria = new \SON\Categoria($connection);
+    // $categoria = new \SON\Categoria($sm->get('Connection')); //Carrega a conexão direto
+    // return $categoria;
+    return new \SON\Categoria($sm->get('Connection'));
+});
+
+//Instância Categoria com todas as dependências satisfeitas
+$categoria = $serviceManager->get('Categoria');
+print_r($categoria);
