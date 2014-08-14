@@ -40,12 +40,23 @@ $events = new Zend\EventManager\SharedEventManager();
 // });
 
 //Configura o listener para todos os métodos da classe Exemplo, usando o '*'
-$events->attach('SON\Event\Exemplo', '*', function ($e)
+// $events->attach('SON\Event\Exemplo', '*', function ($e)
+// {
+//     echo $e->getName()."\n" ; // Pega o nome do evento
+//     echo get_class($e->getTarget())."\n" ; //Pega o nome da classe
+//     echo $e->getParam('valor')."\n";
+// });
+
+$events->attach('SON\Event\Exemplo', 'multiplosEventos.post', function ($e)
 {
-    echo $e->getName()."\n" ; // Pega o nome do evento
-    echo get_class($e->getTarget())."\n" ; //Pega o nome da classe
-    echo $e->getParam('valor')."\n";
-});
+    echo "Executou pos\n" ;
+    
+},1000);
+
+$events->attach('SON\Event\Exemplo', 'multiplosEventos.pre', function ($e)
+{
+    echo "Executou pre\n" ;
+},-1000);
 
 //Lista os eventos attachados para a classe Exemplo
 // print_r($events->getEvents('SON\Event\Exemplo'));die();
@@ -54,10 +65,20 @@ $events->attach('SON\Event\Exemplo', '*', function ($e)
 // print_r($events->getListeners('SON\Event\Exemplo','*'));die();
 
 //Limpa os listeners da classe Exemplo
-$events->clearListeners('SON\Event\Exemplo');
+// $events->clearListeners('SON\Event\Exemplo');
 
-$exemplo->getEventManager()->setSharedManager($events);
+// $exemplo->getEventManager()->setSharedManager($events);
 
-$exemplo->metodo(20);
-$exemplo->metodo2();
+// $exemplo->metodo(20);
+// $exemplo->metodo3(2);
+// $exemplo->metodo3(1);
+// $exemplo->metodo3(2);
+
+//Instâcia a classe de gerênciamento de listeners
+$exemploListener = new SON\Event\ExemploListener();
+
+//Adiciona ao eventManager  a classe de listeners
+$exemplo->getEventManager()->attachAggregate($exemploListener);
+
+$exemplo->multiplosEventos(1);
 
