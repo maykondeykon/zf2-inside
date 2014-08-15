@@ -5,6 +5,7 @@ class Produto
 {
 
     private $categoria;
+
     private $db;
 
     public function addCategoria(CategoriaInterface $categoria)

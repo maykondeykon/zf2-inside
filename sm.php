@@ -14,7 +14,7 @@ $loader->register();
 use Zend\ServiceManager\ServiceManager;
 
 // Instância o ServiceManager
-$serviceManager = new ServiceManager();
+// $serviceManager = new ServiceManager();
 
 // Cria uma instância de Produto no ServiceManager
 // $serviceManager->setService('Produto', new SON\Produto());
@@ -41,17 +41,17 @@ $serviceManager = new ServiceManager();
 
 // Factories
 
-//Cria o serviço Connection
+// Cria o serviço Connection
 // $serviceManager->setService('Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
 
 // Configura a fabricação do objeto Categoria
 // $serviceManager->setFactory('Categoria', function ($sm)
 // {
-//     $connection = $sm->get('Connection');    //Recupera uma instância de Connection
-//     $categoria = new \SON\Categoria($connection);
-//     $categoria = new \SON\Categoria($sm->get('Connection')); //Carrega a conexão direto
-//     return $categoria;
-//     return new \SON\Categoria($sm->get('Connection'));
+// $connection = $sm->get('Connection'); //Recupera uma instância de Connection
+// $categoria = new \SON\Categoria($connection);
+// $categoria = new \SON\Categoria($sm->get('Connection')); //Carrega a conexão direto
+// return $categoria;
+// return new \SON\Categoria($sm->get('Connection'));
 // });
 
 // Instância Categoria com todas as dependências satisfeitas
@@ -72,8 +72,28 @@ $serviceManager = new ServiceManager();
 
 // SharedManager
 
-$serviceManager->setInvokableClass('Produto', 'SON\Produto');
-$serviceManager->setShared('Produto', false);
-$produto = $serviceManager->get('Produto');
-$produto2 = $serviceManager->get('Produto');
-var_dump((spl_object_hash($produto)) === (spl_object_hash($produto2)));
+// $serviceManager->setInvokableClass('Produto', 'SON\Produto');
+// $serviceManager->setShared('Produto', false);
+// $produto = $serviceManager->get('Produto');
+// $produto2 = $serviceManager->get('Produto');
+// var_dump((spl_object_hash($produto)) === (spl_object_hash($produto2)));
+
+// Peering Service Manager
+
+$serviceManagerA = new ServiceManager();
+$serviceManagerA->setInvokableClass('Produto', 'SON\Produto');
+// $produto = $serviceManagerA->get('Produto');
+
+//Herda todos os serviços do serviceManagerA -- escopo pai
+// $serviceManagerB = $serviceManagerA->createScopedServiceManager(ServiceManager::SCOPE_PARENT);
+// $produto = $serviceManagerB->get('Produto');
+// print_r($produto);
+
+// Não herda os serviços do serviceManagerA, mas o serviceManagerA herda todos os serviços dele -- escopo filho
+$serviceManagerC = $serviceManagerA->createScopedServiceManager(ServiceManager::SCOPE_CHILD);
+// $produto = $serviceManagerC->get('Produto');    //Não funciona
+
+$serviceManagerC->setInvokableClass('Exemplo','SON\Event\Exemplo');
+
+//ServiceManagerA acessando um serviço de serviceManagerC
+print_r($serviceManagerA->get('Exemplo'));
