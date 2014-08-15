@@ -42,7 +42,7 @@ $serviceManager = new ServiceManager();
 // Factories
 
 //Cria o serviço Connection
-$serviceManager->setService('Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
+// $serviceManager->setService('Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
 
 // Configura a fabricação do objeto Categoria
 // $serviceManager->setFactory('Categoria', function ($sm)
@@ -58,9 +58,14 @@ $serviceManager->setService('Connection', new SON\Db\Connection('a', 'b', 'c', '
 // $categoria = $serviceManager->get('Categoria');
 // print_r($categoria);
 
-$serviceManager->setFactory('Categoria','SON\CategoriaFactory');
-// Instância Categoria com todas as dependências satisfeitas
-$categoria = $serviceManager->get('Categoria');
-print_r($categoria);
+// $serviceManager->setFactory('Categoria','SON\CategoriaFactory');
+// // Instância Categoria com todas as dependências satisfeitas
+// $categoria = $serviceManager->get('Categoria');
+// print_r($categoria);
 
+// Alias
 
+$serviceManager->setService('SON\Db\Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
+$serviceManager->setAlias('Connection', 'SON\Db\Connection');
+
+print_r($serviceManager->get('Connection'));
