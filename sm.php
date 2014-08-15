@@ -65,7 +65,15 @@ $serviceManager = new ServiceManager();
 
 // Alias
 
-$serviceManager->setService('SON\Db\Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
-$serviceManager->setAlias('Connection', 'SON\Db\Connection');
+// $serviceManager->setService('SON\Db\Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
+// $serviceManager->setAlias('Connection', 'SON\Db\Connection');
 
-print_r($serviceManager->get('Connection'));
+// print_r($serviceManager->get('Connection'));
+
+// SharedManager
+
+$serviceManager->setInvokableClass('Produto', 'SON\Produto');
+$serviceManager->setShared('Produto', false);
+$produto = $serviceManager->get('Produto');
+$produto2 = $serviceManager->get('Produto');
+var_dump((spl_object_hash($produto)) === (spl_object_hash($produto2)));
