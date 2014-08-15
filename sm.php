@@ -100,11 +100,49 @@ use Zend\ServiceManager\ServiceManager;
 
 // Initializers
 
-$serviceManager = new ServiceManager();
-$serviceManager->setInvokableClass('Produto', 'SON\Produto');
-$serviceManager->setService('Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
+// $serviceManager = new ServiceManager();
+// $serviceManager->setInvokableClass('Produto', 'SON\Produto');
+// $serviceManager->setService('Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
 
 // $instance recebe automaticamente a instância de SON\Produto
+// $serviceManager->addInitializer(function ($instance, $serviceManager)
+// {
+// // Se $instace for uma instância de SON\Produto
+// // seta a dependência com setDb
+// if ($instance instanceof SON\Produto) {
+// $instance->setDb($serviceManager->get('Connection'));
+// }
+// });
+
+// $produto = $serviceManager->get('Produto');
+// print_r($produto);
+
+// Service Config
+
+$serviceManager = new ServiceManager();
+
+$config = array(
+    'factories' => array( // Cria uma array de factories
+        'Connection' => function ($sm) // Cria a factory Connection
+        {
+            return new SON\Db\Connection('a', 'b', 'c', 'd');
+        }
+    ),
+    'invokables' => array( // Prepara instâncias no Service Manager
+        'Produto' => 'SON\Produto'
+    ),
+    'shared' => array(
+        'Produto' => false // Indica que a classe Produto deve criar um novo objeto a cada chamada
+    )); 
+
+
+
+// Instância o ServiceManagerConfig com o array de configuração acima
+$serviceConfig = new Zend\Mvc\Service\ServiceManagerConfig($config);
+
+// Repassa ao Service Manager as configurações
+$serviceConfig->configureServiceManager($serviceManager);
+
 $serviceManager->addInitializer(function ($instance, $serviceManager)
 {
     // Se $instace for uma instância de SON\Produto
@@ -114,5 +152,5 @@ $serviceManager->addInitializer(function ($instance, $serviceManager)
     }
 });
 
-$produto = $serviceManager->get('Produto');
-print_r($produto);
+print_r($serviceManager->get('Produto'));
+
