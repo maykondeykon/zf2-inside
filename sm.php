@@ -80,20 +80,39 @@ use Zend\ServiceManager\ServiceManager;
 
 // Peering Service Manager
 
-$serviceManagerA = new ServiceManager();
-$serviceManagerA->setInvokableClass('Produto', 'SON\Produto');
+// $serviceManagerA = new ServiceManager();
+// $serviceManagerA->setInvokableClass('Produto', 'SON\Produto');
 // $produto = $serviceManagerA->get('Produto');
 
-//Herda todos os serviços do serviceManagerA -- escopo pai
+// Herda todos os serviços do serviceManagerA -- escopo pai
 // $serviceManagerB = $serviceManagerA->createScopedServiceManager(ServiceManager::SCOPE_PARENT);
 // $produto = $serviceManagerB->get('Produto');
 // print_r($produto);
 
 // Não herda os serviços do serviceManagerA, mas o serviceManagerA herda todos os serviços dele -- escopo filho
-$serviceManagerC = $serviceManagerA->createScopedServiceManager(ServiceManager::SCOPE_CHILD);
-// $produto = $serviceManagerC->get('Produto');    //Não funciona
+// $serviceManagerC = $serviceManagerA->createScopedServiceManager(ServiceManager::SCOPE_CHILD);
+// $produto = $serviceManagerC->get('Produto'); //Não funciona
 
-$serviceManagerC->setInvokableClass('Exemplo','SON\Event\Exemplo');
+// $serviceManagerC->setInvokableClass('Exemplo','SON\Event\Exemplo');
 
-//ServiceManagerA acessando um serviço de serviceManagerC
-print_r($serviceManagerA->get('Exemplo'));
+// ServiceManagerA acessando um serviço de serviceManagerC
+// print_r($serviceManagerA->get('Exemplo'));
+
+// Initializers
+
+$serviceManager = new ServiceManager();
+$serviceManager->setInvokableClass('Produto', 'SON\Produto');
+$serviceManager->setService('Connection', new SON\Db\Connection('a', 'b', 'c', 'd'));
+
+// $instance recebe automaticamente a instância de SON\Produto
+$serviceManager->addInitializer(function ($instance, $serviceManager)
+{
+    // Se $instace for uma instância de SON\Produto
+    // seta a dependência com setDb
+    if ($instance instanceof SON\Produto) {
+        $instance->setDb($serviceManager->get('Connection'));
+    }
+});
+
+$produto = $serviceManager->get('Produto');
+print_r($produto);
