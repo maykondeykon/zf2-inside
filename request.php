@@ -32,13 +32,61 @@ use Zend\Http\Request;
 // echo $request->toString();
 
 //Cria a requisição http POST-- não envia
+// $request = new Request();
+// $request->setMethod(Request::METHOD_POST);
+//Seta parâmetros na requisição
+// $request->getPost()->set('nome', 'maykon');
+// $request->getPost()->set('x', '10');
+
+// $request->setUri('http://google.com');
+// $request->setContent($request->getPost()->toString()."\n");
+
+// echo $request->toString();
+
+
+//--Headers
+
 $request = new Request();
 $request->setMethod(Request::METHOD_POST);
 //Seta parâmetros na requisição
 $request->getPost()->set('nome', 'maykon');
-$request->getPost()->set('x', '10');
-
+$request->getHeaders()->addHeaders(array('headerX'=>10, 'headerY'=> 20));
+$request->getHeaders()->addHeaderLine('Content-Type: text/html');
 $request->setUri('http://google.com');
 $request->setContent($request->getPost()->toString()."\n");
 
 echo $request->toString();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
