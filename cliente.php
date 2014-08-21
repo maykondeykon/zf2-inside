@@ -31,22 +31,31 @@ use Zend\Http\Client;
 // $client->dispatch($request);
 // echo $client->getResponse()->toString();
 
+// -- Redirects
+// $request = new Request();
+// $request->setMethod(Request::METHOD_GET);
+// $request->setUri('http://google.com');
+// $request->getHeaders()->addHeaderLine('nome: maykon');
 
-//-- Redirects
-$request = new Request();
-$request->setMethod(Request::METHOD_GET);
-$request->setUri('http://google.com');
-$request->getHeaders()->addHeaderLine('nome: maykon');
+// $client = new Client('http://google.com', array(
+// //limita a quantidade de redirecionamentos do cliente HTTP
+// 'maxredirects' => 1
+// ));
+// // Envia uma requisição usando uma request específica -- requer um objeto do tipo Request
+// $client->dispatch($request);
+// echo $client->getResponse()->toString();
 
-$client = new Client('http://google.com', array(
-    //limita a quantidade de redirecionamentos do cliente HTTP
-    'maxredirects' => 1
-));
-// Envia uma requisição usando uma request específica -- requer um objeto do tipo Request
-$client->dispatch($request);
-echo $client->getResponse()->toString();
+// --Adapter\Socket
 
+//Configuração do adaptador para uso de SSL, no HTTPS
+$config = array(
+    'adapter' => 'Zend\Http\Client\Adapter\Socket',
+    'ssltransport' => 'tls'
+);
 
+$client = new Client('http://google.com', $config);
+$response = $client->send();
+echo $response->toString();
 
 
 
