@@ -27,3 +27,50 @@ $loader->register();
         ->ServiceListener -> somente com Zend\Mvc -> carrega services, controllers, plugins, view_helpers
     ->loadModules.post -> indica que todos os módulos foram carregados, podendo atachar listeners agora
  */
+
+use Zend\ModuleManager\Listener;
+use Zend\ModuleManager\ModuleManager;
+
+//Configura o caminho dos módulos
+$listenerOptions = new Listener\ListenerOptions(array(
+    'module_paths' => array(
+        './modules'
+    )
+));
+
+//Agrega vários listeners
+$aggregateListener = new Listener\DefaultListenerAggregate($listenerOptions);
+
+//Indica quais módulos devem ser carregados
+$moduleManager = new ModuleManager(array(
+    'Modulo'
+));
+
+//Attacha os listeners ao moduleManager
+$moduleManager->getEventManager()->attachAggregate($aggregateListener);
+
+//Carrega os módulos
+$moduleManager->loadModules();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
