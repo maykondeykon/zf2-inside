@@ -18,4 +18,12 @@ $loader->register();
  - LoadModule -> carrrega cada módulo
     ->loadModule.resolve (retorna uma instância do módulo)
     ->loadModule
+        Eventos:
+        ->getAutoloaderConfig() -> configura o autoloader do módulo, usando o do Zend ou criando um próprio
+        ->getConfig() -> mescla os arquivos de configurações
+        ->init(ModuleManager) -> inicia todos os requests do módulo (inicializar somente o necessário)
+        ->onBootstrap() -> usa o Zend\Mvc()-> bootstrap event
+        ->LocatorRegistrationListener ->  para usa-la deve-se implementar a Zend\ModuleManager\Feature\LocatorRegisteredInterface
+        ->ServiceListener -> somente com Zend\Mvc -> carrega services, controllers, plugins, view_helpers
+    ->loadModules.post -> indica que todos os módulos foram carregados, podendo atachar listeners agora
  */
