@@ -45,19 +45,30 @@ use Zend\Http\Client;
 // $client->dispatch($request);
 // echo $client->getResponse()->toString();
 
-// --Adapter\Socket
+// // --Adapter\Socket
 
-//Configuração do adaptador para uso de SSL, no HTTPS
+// //Configuração do adaptador para uso de SSL, no HTTPS
+// $config = array(
+//     'adapter' => 'Zend\Http\Client\Adapter\Socket',
+//     'ssltransport' => 'tls'
+// );
+
+// $client = new Client('http://google.com', $config);
+// $response = $client->send();
+// echo $response->toString();
+
+
+// --Adapter\Curl
+
+//Configuração do adaptador para uso do Curl
 $config = array(
-    'adapter' => 'Zend\Http\Client\Adapter\Socket',
-    'ssltransport' => 'tls'
+    'adapter' => 'Zend\Http\Client\Adapter\Curl',
+    'curloptions' => array(CURLOPT_FOLLOWLOCATION => true),
 );
 
 $client = new Client('http://google.com', $config);
 $response = $client->send();
 echo $response->toString();
-
-
 
 
 
