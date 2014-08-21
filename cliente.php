@@ -16,8 +16,18 @@ use Zend\Http\Request;
 use Zend\Http\Client;
 
 //Envia uma requisição para o servidor do google
-$client = new Client('http://google.com');
-$response = $client->send();
+// $client = new Client('http://google.com');
+// $response = $client->send();
 
 //Exibe a resposta do servidor
-echo $response->toString();
+// echo $response->toString();
+
+$request = new Request();
+$request->setMethod(Request::METHOD_GET);
+$request->setUri('http://google.com');
+$request->getHeaders()->addHeaderLine('nome: maykon');
+
+$client = new Client();
+//Envia uma requisição usando uma request específica -- requer um objeto do tipo Request
+$client->dispatch($request);
+echo $client->getResponse()->toString();
